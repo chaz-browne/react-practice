@@ -1,11 +1,10 @@
 import './App.css';
-import { ToDoWrapper } from './components/ToDoWrapper';
+import { TodoWrapper } from './components/TodoWrapper';
 
 function App() {
   return (
     <div className="App">
-      <ToDoWrapper />
-   
+      <TodoWrapper  />
     </div>
   );
 }

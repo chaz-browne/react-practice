@@ -1,23 +1,63 @@
-import React, {useState} from "react";
-import { ToDoForm } from './ToDoForm'
-import { v4 as uuidv4 } from 'uuid';
-import { ToDo } from "./todo";
-uuidv4();
+import React, { useState } from "react";
+import { Todo } from "./Todo";
+import { TodoForm } from "./TodoForm";
+import { v4 as uuidv4 } from "uuid";
+import { EditTodoForm } from "./EditTodoForm";
+import Clock from "react-clock";
 
-export const ToDoWrapper = () => {
-    const [todos, setTodos] = useState([])
+export const TodoWrapper = () => {
+  const [todos, setTodos] = useState([]);
 
-    const addToDo = todo =>{
-        setTodos([...todos, {id: uuidv4(), task: todo, 
-        completed: false, isEditing: false}])
-        console.log(todos)
-    }
-    return(
-        <div className='ToDoWrapper'>
-            <ToDoForm addToDo={addToDo}/>
-            {todos.map((todo, index) => (
-                <ToDo task={todo} key = {index} />
-            ))}
-        </div>
-    )
-}
+  const addTodo = (todo) => {
+    setTodos([
+      ...todos,
+      { id: uuidv4(), task: todo, completed: false, isEditing: false },
+    ]);
+  }
+
+  const deleteTodo = (id) => setTodos(todos.filter((todo) => todo.id !== id));
+  const toggleComplete = (id) => {
+    setTodos(
+      todos.map((todo) =>
+        todo.id === id ? { ...todo, completed: !todo.completed } : todo
+      )
+    );
+  }
+
+  const editTodo = (id) => {
+    setTodos(
+      todos.map((todo) =>
+        todo.id === id ? { ...todo, isEditing: !todo.isEditing } : todo
+      )
+    );
+  }
+
+  const editTask = (task, id) => {
+    setTodos(
+      todos.map((todo) =>
+        todo.id === id ? { ...todo, task, isEditing: !todo.isEditing } : todo
+      )
+    );
+  };
+
+  return (
+    <div className="TodoWrapper">
+      <h1>TODAY'S LIST</h1>
+      <TodoForm addTodo={addTodo} />
+      {/* display todos */}
+      {todos.map((todo) =>
+        todo.isEditing ? (
+          <EditTodoForm editTodo={editTask} task={todo} />
+        ) : (
+          <Todo
+            key={todo.id}
+            task={todo}
+            deleteTodo={deleteTodo}
+            editTodo={editTodo}
+            toggleComplete={toggleComplete}
+          />
+        )
+      )}
+    </div>
+  );
+};
